@@ -34,7 +34,7 @@ $  mvn clean test -Dcucumber.tags=@Sample -Denvironment=default
        
    |                                   Command                                        |                        Description                         |
    |----------------------------------------------------------------------------------|------------------------------------------------------------|
-   | -DforkCount=0 clean test                                                         | in case you need to debug, for use in the IDE runner                                 |
+   | -DforkCount=0 clean test                                                         | in case you need to debug, for use in the IDE runner       |
    | mvn clean test -DforkCount=0  "-Dcucumber.tags=@Smoke" -Denvironment=dev         | specifying a tag and including the debug option            |
    | mvn clean test “-Dcucumber.tags=@Smoke” -Denvironment=dev#pais                   | multi-environments and a subset of the chosen environment  |
    | mvn clean test "-Dcucumber.tags='@Accounts and @Smoke'" -Denvironment=dev        | Multiple tags and environment enabled                      |
