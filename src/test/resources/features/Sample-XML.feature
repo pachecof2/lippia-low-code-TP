@@ -11,7 +11,7 @@ Feature: Sample
     * define body = read(xmls/bodies/pets.xml)
     Given base url $(env.base_url_petstore)
     And set value "doggie2323" of key Pet.name in body $(var.body)
-    And set value "9494323" of key Pet.id in body $(var.body)
+    And set value "13245" of key Pet.id in body $(var.body)
     And body $(var.body)
     When execute method POST
     Then the status code should be 200
