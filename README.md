@@ -26,7 +26,7 @@ $ git clone https://github.com/Crowdar/lippia-low-code-sample-project.git && cd 
 $  mvn clean test -Dcucumber.tags=@Sample -Denvironment=default
 ```
 
-+ Additional options are available in the following table:
++ Additionally, other options are available for running the tests, as outlined in the following table:
    ```
    * -D is used to define system properties or command-line properties, which Maven will utilize during the project's building and/or execution process.
    * Using -P followed by the profile name allows Maven to apply the configurations associated with that specific profile during the project's build process.
@@ -34,11 +34,11 @@ $  mvn clean test -Dcucumber.tags=@Sample -Denvironment=default
        
    |                                   Command                                        |                        Description                         |
    |----------------------------------------------------------------------------------|------------------------------------------------------------|
-   | -DforkCount=0 clean test                                                         | in case you need to debug, for use in the IDE runner       |
-   | mvn clean test -DforkCount=0  "-Dcucumber.tags=@Smoke" -Denvironment=dev         | specifying a tag and including the debug option            |
-   | mvn clean test “-Dcucumber.tags=@Smoke” -Denvironment=dev#pais                   | multi-environments and a subset of the chosen environment  |
+   | -DforkCount=0 clean test                                                         | In case you need to debug, for use in the IDE runner       |
+   | mvn clean test -DforkCount=0  "-Dcucumber.tags=@Smoke" -Denvironment=dev         | Specifying a tag and including the debug option            |
+   | mvn clean test “-Dcucumber.tags=@Smoke” -Denvironment=dev#pais                   | Multi-environments and a subset of the chosen environment  |
    | mvn clean test "-Dcucumber.tags='@Accounts and @Smoke'" -Denvironment=dev        | Multiple tags and environment enabled                      |
-   | mvn clean test "-Dcucumber.tags=@Sample" -Denvironment=dev -PParalelo            | multiple execution threads                                 |
+   | mvn clean test "-Dcucumber.tags=@Sample" -Denvironment=dev -PParalelo            | Multiple execution threads                                 |
 
 
 ## Contents
