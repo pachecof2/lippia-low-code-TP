@@ -45,6 +45,7 @@ $  mvn clean test -Dcucumber.tags=@Sample -Denvironment=default
 
 1. [Variables](##Variables)    
    I. [Define](#title_define)
+   II. [Read](#title_read)
 2. [Properties](../path/to/properties)   
    I. [Lippia configuration file](#title_lippia_conf_file)   
    II. [Basic properties file](../path/to/properties)
@@ -57,7 +58,8 @@ $  mvn clean test -Dcucumber.tags=@Sample -Denvironment=default
 4. [Assertions](#title_assertions)   
    I. [Status code](#title_status_code)
    II. [JSON](##II.JSON)
-   III.[Schema](#title_schema)
+   III. [XML](##III.XML)
+   VI.[Schema](#title_schema)
 5. [Steps Glossary](#title_step_glosary)
 
 ## Variables
@@ -91,12 +93,22 @@ $  mvn clean test -Dcucumber.tags=@Sample -Denvironment=default
 
 --------------------------------------------------------------
 
+### II. <a id="title_read"></a>Read
+#### The read function allows reading files with .json, .txt, or .xml extensions. You only need to provide the path where the file is located within the project.
+#### You can store the content of that file using the *define* step as shown below :
+
+### For example
+
+      * define body = read(xmls/bodies/pets.xml)
+      * define body = read(jsons/bodies/pets.json)
+--------------------------------------------------------------
+
 ## <a id="title_lippia_conf_file"></a>Lippia Configuration file
 
 ### (lippia.config)
 
 ```
-├── automation-reestructuracion-gateway
+├── lippia-low-code-sample-project
 │   │   
 │   ├── src
 │   │   ├── main
@@ -199,7 +211,7 @@ environments {
 ## IV.<a id="title_body"></a>Body
 
 ```
-├── automation-reestructuracion-gateway
+├── lippia-low-code-sample-project
 │   │   
 │   ├── src
 │   │   ├── main
@@ -212,27 +224,63 @@ environments {
 │   │     │   └── features
 │   │     │   └── files
 │   │     │   └── jsons
+│   │     |         └──bodies
+│   │     |         └──headers
+│   │     |         └──schemas
+│   │     │   └── xmls
 │   │               └──bodies
+│   │               └──schemas
 │   │               └── ...
 │        
 ```
 
 #### You can reference a json file created in the default location (jsons/bodies folder) : 
 ####If the body doesn't need modification of any attribute or value, then this step is all that's required.
+#### 
 
       Given body \S+
 
-### For example
 
-| Version 3.3.0.0                        | Version 3.3.0.1 or newer                           |
-|:---------------------------------------|:---------------------------------------------------|
-| Given body name_file.json              | Given body jsons/bodies/name_file.json             |
+#### This new syntax $(var.name) appears, allowing us to use any previously defined variable in the various predefined steps, thereby reducing long paths sometimes generated, such as jsons/bodies/subdirectory/file.json.
+#### Starting from version 3.3.0.3, the body step for JSON files works in the same way, and the following is added where it is previously assigned to a variable using the aforementioned [read](#title_read) method. After any modification in the request body, it is necessary to close those changes with the step body $(var.name).
+#### Meaning, this applies to examples 1 and 3 as shown below.
+
+### Example 1
+
+      * define body = read(jsons/bodies/body.json)
+        Given base url $(env.base_url_petstore)
+        And body $(var.body)
+
+### Example 2
+
+        Given base url $(env.base_url_petstore)
+        And body jsons/bodies/body.json
+     
+#### Note that examples 1 and 2 are compatible with handling .json files, whereas for .xml files, it is only possible using the second method. Let's look at example 3 for this case.
+
+### Example 3
+
+    * define body = read(xmls/bodies/pets.xml)
+    Given base url $(env.base_url_petstore)
+    And set value "doggie2323" of key Pet.name in body $(var.body)
+    And set value "13245" of key Pet.id in body $(var.body)
+    And body $(var.body)
+
+
+
+### Additional details
+
+| Version 3.3.0.0                        | Versions 3.3.0.1 &#124; 3.3.0.2        | Version 3.3.0.3                                                       |
+|:---------------------------------------|:---------------------------------------|:----------------------------------------------------------------------|
+| Given body name_file.json              | Given body jsons/bodies/name_file.json | Given body jsons/bodies/name_file.json  *or* Given body $(var.body)   |
 
 #### Or you can create a new folder inside it :
 
-| Version 3.3.0.0                        | Version 3.3.0.1 or newer                           |
-|:---------------------------------------|:---------------------------------------------------|
-| Given body new_folder/name_file.json   | Given body jsons/bodies/new_folder/name_file.json  |
+| Type | Version 3.3.0.0                      | Versions 3.3.0.1 &#124; 3.3.0.2                   | Version 3.3.0.3                                                                |
+|:-----|:-------------------------------------|:--------------------------------------------------|:-------------------------------------------------------------------------------|
+| json | Given body new_folder/name_file.json | Given body jsons/bodies/new_folder/name_file.json | Given body jsons/bodies/new_folder/name_file.json  *or* Given body $(var.body) |
+| xml  | not supported                        | not supported                                     | Given body $(var.body)                                                         |
+
 
 
 
@@ -248,6 +296,11 @@ environments {
 
          And set value 15 of key tags[1].id in body jsons/bodies/body2.json
 
+#### If you use the [read](#title_read) method to obtain the value and set it to a variable, you must add the body step.
+
+        And set value "13245" of key Pet.id in body $(var.body)
+        And body $(var.body)
+
 ---------------------------------------------------------------------------------
 
 ### II. DELETE
@@ -258,6 +311,11 @@ environments {
 
            
            And delete keyValue tags[0].id in body jsons/bodies/body2.json
+
+#### If you use the [read](#title_read) method to obtain the value and set it to a variable, you must add the body step.
+          
+           And delete keyValue Pet.id in body $(var.body)
+           And body $(var.body)
            
       
 ---------------------------------------------------------------------------------
@@ -310,7 +368,7 @@ environments {
 ### <a id="title_schema"></a>Schemas
 
 ```
-├── automation-reestructuracion-gateway
+├── lippia-low-code-sample-project
 │   │   
 │   ├── src
 │   │   ├── main
@@ -323,11 +381,15 @@ environments {
 │   │     │   └── features
 │   │     │   └── files
 │   │     │   └── jsons
+│   │     |          └── ...
+│   │     |          └── ...
+│   │     |          └── ...
+│   │     |          └── ...
+│   │     |          └── schemas
+│   │     │   └── xmls
 │   │               └── ...
+│   │               └──schemas
 │   │               └── ...
-│   │               └── ...
-│   │               └── ...
-│   │               └── schemas
 |
 │        
 ```
@@ -336,9 +398,10 @@ environments {
 
 ### For example
 
-| Version 3.3.0.0                         | Version 3.3.0.1 or newer                          |
-|:----------------------------------------|:--------------------------------------------------|
-| And validate schema character.json      | And validate schema jsons/schemas/character.json  |
+| Type | Version 3.3.0.0                 | Version 3.3.0.1 &#124; 3.3.0.2                 | Version 3.3.0.3                                                                      |
+|:-----|:--------------------------------|:-----------------------------------------------|:-------------------------------------------------------------------------------------|
+| json |  validate schema character.json | validate schema jsons/schemas/character.json   | validate schema jsons/schemas/pet.json                                               |
+| xml  | not sopported                   | not sopported                                  | validate schema read(xmls/schemas/pets.xsd)                                          |
 
 ## <a id="title_step_glosary"></a>Steps Glossary
 
@@ -352,7 +415,7 @@ environments {
 | define [^\d]\S+ = \S+                                                | definir  [^\d]\S+ = \S+                                                 |
 | delete keyValue \<any> in body \<any>                                | eliminar clave \<any> en el  body \<any>                                |
 | endpoint \S+                                                         | endpoint \S+                                                            |
-| execute method GET l POST l PUT l PATCH l DELETE                     | ejecutar metodo GET l POST l PUT l PATCH l DELETE                       |
+| execute method GET &#124; POST &#124; PUT &#124; PATCH &#124; DELETE | ejecutar metodo GET &#124; POST &#124; PUT &#124; PATCH &#124; DELETE   |
 | execute query '\<any>'                                               | ejecutar query '\<any>'                                                 |
 | header \S+ = \S+                                                     | header \S+ = \S+                                                        |
 | And I save from result JSON the attribute <any> on variable <any>    | guardo del resultado JSON el atributo <any> en la variable \<any>       |
@@ -364,5 +427,6 @@ environments {
 | validate field '\<any>' = \<any>                                     | validar el campo '\<any>' = \<any>                                      |
 | validate schema \<string>                                            | validar schema \<string>                                                |
 | verify the response ([^\\s].+) '(equals &#124; contains)' ([^\\s].*) | verificar la respuesta ([^\\s].+) '(equals &#124; contains)' ([^\\s].*) |
+
 
 

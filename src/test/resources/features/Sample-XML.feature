@@ -18,6 +18,7 @@ Feature: Sample
     And response should be Pet.name = doggie2323
     And validate schema read(xmls/schemas/pets.xsd)
 
+
   @petstoreXML
   Scenario Outline: Add a new pet to the store with xml format outline
     * define body = read(xmls/bodies/pets.xml)
