@@ -1,0 +1,113 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "tagIds": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "userId": {
+            "type": "string"
+        },
+        "billable": {
+            "type": "boolean"
+        },
+        "taskId": {
+            "type": ["string", "null"]
+        },
+        "projectId": {
+            "type": "string"
+        },
+        "workspaceId": {
+            "type": "string"
+        },
+        "timeInterval": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "start": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "end": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "duration": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "start",
+                "end",
+                "duration"
+            ]
+        },
+        "customFieldValues": {
+            "type": "array",
+            "items": {}
+        },
+        "type": {
+            "type": "string"
+        },
+        "kioskId": {
+            "type": ["string", "null"]
+        },
+        "hourlyRate": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "amount",
+                "currency"
+            ]
+        },
+        "costRate": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "amount",
+                "currency"
+            ]
+        },
+        "isLocked": {
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "id",
+        "description",
+        "userId",
+        "billable",
+        "projectId",
+        "workspaceId",
+        "timeInterval",
+        "hourlyRate",
+        "costRate",
+        "isLocked",
+        "type"
+    ]
+}
