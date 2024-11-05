@@ -1,0 +1,18 @@
+{
+  "billable": true,
+  "customAttributes": [
+    {
+      "name": "race",
+      "namespace": "user_info",
+      "value": "USD"
+    }
+  ],
+  "description": "New name updated",
+  "end": "2024-11-28T18:00:00Z",
+  "projectId": "671a5946c9a7b24e6bcf0fd3",
+  "start": "2024-11-28T09:00:00Z",
+  "tagIds": [
+    "6725585dc8a6d17affeab244"
+  ],
+  "type": "REGULAR"
+}

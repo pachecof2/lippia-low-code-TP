@@ -1,0 +1,19 @@
+{
+  "billable": true,
+  "customAttributes": [
+    {
+      "name": "race",
+      "namespace": "user_info",
+      "value": "USD"
+    }
+  ],
+  "description": "Automatizacion carga de horas LTM",
+  "end": "2025-12-31T18:00:00Z",
+  "projectId": "671a5946c9a7b24e6bcf0fd3",
+  "start": "2025-12-31T09:00:00Z",
+  "tagIds": [
+    "6723a0b3f4e31810f4e9e0ca",
+    "6723a0b3f4e31810f4e9e0ca"
+  ],
+  "type": "REGULAR"
+}
