@@ -1,4 +1,4 @@
-@Projects
+@Projects @TPFinal
 Feature: Projects
   Background:
     Given base url https://api.clockify.me/api/v1
@@ -14,10 +14,11 @@ Feature: Projects
     * define projectId = response[0].id
     * define projectName = response[0].name
 
-  @Projects @Update
+  @Projects @UpdateProject
   Scenario: Update a Project
     And header x-api-key = MmI5NjMxNGQtNjJkNS00NDc1LWI3NGMtZWYwMmM2ZDA3ZjQx
     And call Project.feature@GetProjectId
+    And call Workspace.feature@GetWorkspaceId
     And endpoint /workspaces/{{workspaceId}}/projects/{{projectId}}
     And set value "1" of key id in body jsons/bodies/bodyUpdateProject.json
     When execute method PUT
@@ -25,29 +26,32 @@ Feature: Projects
     And response should be archived = true
 
 
-  @Projects @Delete
+  @Projects @DeleteProject
   Scenario:  Delete Project recently created
     And header x-api-key = MmI5NjMxNGQtNjJkNS00NDc1LWI3NGMtZWYwMmM2ZDA3ZjQx
+    And call Workspace.feature@GetWorkspaceId
     And call Project.feature@GetProjectId
-    And endpoint /workspaces/67182d64ab5dd152ad9aa1c6/projects/{{projectId}}
+    And endpoint /workspaces/{{workspaceId}}/projects/{{projectId}}
     When execute method DELETE
     Then the status code should be 200
 
-  @Projects @addProject
+  @Projects @AddProject
   Scenario: Add new project
     And header x-api-key = MmI5NjMxNGQtNjJkNS00NDc1LWI3NGMtZWYwMmM2ZDA3ZjQx
+    And call Workspace.feature@GetWorkspaceId
     And call Project.feature@GetProjectName
-    And endpoint /workspaces/67182d64ab5dd152ad9aa1c6/projects
+    And endpoint /workspaces/{{workspaceId}}/projects
     And set value {{projectName}} of key name in body jsons/bodies/bodyCreateProject.json
     When execute method POST
     Then the status code should be 201
     And response should be name = {{projectName}}
 
 
-  @Projects @addProject @Failed
+  @Projects @AddProject @Failed
   Scenario Outline: Add new project without body
     And header x-api-key = MmI5NjMxNGQtNjJkNS00NDc1LWI3NGMtZWYwMmM2ZDA3ZjQx
-    And endpoint /workspaces/67182d64ab5dd152ad9aa1c6/projects
+    And call Workspace.feature@GetWorkspaceId
+    And endpoint /workspaces/{{workspaceId}}/projects
     When execute method POST
     Then the status code should be 400
     And verify the response message 'contains' <message>
@@ -58,7 +62,8 @@ Feature: Projects
   @Projects @GetProjects
   Scenario Outline: Get project by name
     And header x-api-key = MmI5NjMxNGQtNjJkNS00NDc1LWI3NGMtZWYwMmM2ZDA3ZjQx
-    And endpoint /workspaces/67182d64ab5dd152ad9aa1c6/projects
+    And call Workspace.feature@GetWorkspaceId
+    And endpoint /workspaces/{{workspaceId}}/projects
     And add query parameter '<name>' = <name>
     And add query parameter '<strict-name-search>' = <strict-name-search>
     When execute method GET
@@ -66,13 +71,14 @@ Feature: Projects
     And response should be [1].name = <name>
     Examples:
       | name                      | strict-name-search |
-      | new project automation 2 | 1                  |
+      | new project automation 02 | 1                  |
 
 
   @Projects @GetProjects
   Scenario Outline: Find project by ID valid
     And header x-api-key = MmI5NjMxNGQtNjJkNS00NDc1LWI3NGMtZWYwMmM2ZDA3ZjQx
-    And endpoint /workspaces/67182d64ab5dd152ad9aa1c6/projects/671a5ca84800084f06377be6
+    And call Workspace.feature@GetWorkspaceId
+    And endpoint /workspaces/{{workspaceId}}/projects/671a5ca84800084f06377be6
     When execute method GET
     Then the status code should be 200
     And response should be name = <name>

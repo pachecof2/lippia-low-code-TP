@@ -1,4 +1,4 @@
-@DatetimeEntry
+@DatetimeEntry @TPFinal
 Feature: Datetime Entry
   Background:
     Given base url https://api.clockify.me/api/v1
@@ -27,7 +27,7 @@ Feature: Datetime Entry
     When execute method GET
     Then the status code should be 200
     And validate schema jsons/schemas/getTime.json
-    And response should be $.[1]timeInterval.duration = PT3S
+    Then response should be $[0].timeInterval.duration = PT3S
 
 
   @DatetimeEntry @AddNewTimeEntry
@@ -45,6 +45,7 @@ Feature: Datetime Entry
 
   @DatetimeEntry @UpdateDatetime
   Scenario Outline: Update DateTime and description entry successfully
+    And call Workspace.feature@GetWorkspaceId
     And call TimeEntry.feature@AddNewTimeEntry
     And endpoint /workspaces/{{workspaceId}}/time-entries/{{newTimeEntryId}}
     And body read(jsons/bodies/bodyUpdateDataEntry.json)
@@ -61,6 +62,7 @@ Feature: Datetime Entry
   @DatetimeEntry @DeleteEntry
   Scenario: Delete data entry of a new Time Entry
     Given call TimeEntry.feature@UpdateDatetime
+    And call Workspace.feature@GetWorkspaceId
     And endpoint /workspaces/{{workspaceId}}/time-entries/{{newTimeEntryId}}
     And execute method DELETE
     Then the status code should be 204
@@ -84,7 +86,7 @@ Feature: Datetime Entry
       | 400        | Id project invalid            | 2024-10-31T09:00:00Z | 2024-10-31T18:30:00Z | 672388f2cd910a7793f36114 | Project doesn't belong to Workspace                                                    |
       | 400        | Date start empty              |                      | 2024-10-31T18:40:00Z | 672388f2cd910a7793f36111 | You entered invalid value for field : [start]                                          |
       | 400        | Date end empty                | 2024-10-31T09:00:00Z |                      | 672388f2cd910a7793f36111 | You entered invalid value for field : [end]                                            |
-      | 400        | Datetime greater an 999 hours | 2024-10-31T09:00:00Z | 2029-10-31T09:00:00Z | 672388f2cd910a7793f36111 | Time entry cannot have duration more than 999 hours.                                   |
+      | 400        | Datetime greater an 999 hours | 2024-10-31T09:00:00Z | 2029-10-31T09:00:00Z | 671a5946c9a7b24e6bcf0fd3 | Time entry cannot have duration more than 999 hours.                                   |
 
   @DatetimeEntry @GetTimeFailed
   Scenario Outline: Get time Entry Failed by <motive>
@@ -103,7 +105,7 @@ Feature: Datetime Entry
   Scenario Outline: Update DateTime entry Failed by <description>
     And call TimeEntry.feature@AddNewTimeEntry
     * define body = read(jsons/bodies/bodyAddDataEntry.json)
-    And endpoint /workspaces/{{workspaceId}}/time-entries/{{newTimeEntryId}}
+    And endpoint /workspaces/67182d64ab5dd152ad9aa1c6/time-entries/{{newTimeEntryId}}
     And set value <startDate> of key start in body $(var.body)
     And set value <endDate> of key end in body $(var.body)
     And set value <projectId> of key projectId in body $(var.body)

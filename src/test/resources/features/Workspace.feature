@@ -1,4 +1,4 @@
-@Workspace
+@Workspace @TPFinal
 Feature: Workspace
 
   Background:
